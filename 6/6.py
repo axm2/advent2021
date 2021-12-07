@@ -5,6 +5,7 @@ def simulate_fish(arr):
     for i in range(256):
         for i in range(0, 10):
             if i == 0:
+                # rolled into 7 and 9 because we will subtract later, making it roll into 6 and 8 respectively.
                 counter[7] = counter.get(7, 0) + counter[0]
                 counter[9] = counter[0]
             else:
