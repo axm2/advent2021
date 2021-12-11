@@ -34,10 +34,8 @@ def simulate_octopuses(input):
                         flashed.add((i, j))
 
         # reset
-        for i in range(len(input)):
-            for j in range(len(input[i])):
-                if input[i][j] > 9:
-                    input[i][j] = 0
+        for flashed_octo in flashed:
+            input[flashed_octo[0]][flashed_octo[1]] = 0
         flash_counter += len(flashed)
         if len(flashed) == 100:
             print("ALLFLASHED!")
