@@ -9,6 +9,7 @@ def simulate_octopuses(input):
 
     # need to avoid edges every time we check or flash.
     flash_counter = 0
+    checks = set((i, j) for i in (-1, 0, 1) for j in (-1, 0, 1)) - set((0, 0))
     for step in range(1000):
         flash_queue = []
         for i in range(len(input)):
@@ -20,228 +21,17 @@ def simulate_octopuses(input):
 
         # flash
         while not len(flash_queue) == 0:
-            # flash 9 surrounding cells
+            # flash 8 surrounding cells
             # don't go over bounds
-            # hard code, we know its a 10 by 10
-            # if x = 0 or x = 9
-            # if y = 0 or y = 9
             coord = flash_queue.pop(0)
-
-            # middle
-            if 0 < coord[0] < len(input) - 1 and 0 < coord[1] < len(input) - 1:
-                # safe to flash all 8 coords
-                input[coord[0] - 1][coord[1] - 1] += 1
-                if input[coord[0] - 1][coord[1] - 1] > 9 and (coord[0] - 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] - 1))
-                    flashed.add((coord[0] - 1, coord[1] - 1))
-
-                input[coord[0] + 1][coord[1] - 1] += 1
-                if input[coord[0] + 1][coord[1] - 1] > 9 and (coord[0] + 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] - 1))
-                    flashed.add((coord[0] + 1, coord[1] - 1))
-
-                input[coord[0] + 1][coord[1] + 1] += 1
-                if input[coord[0] + 1][coord[1] + 1] > 9 and (coord[0] + 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] + 1))
-                    flashed.add((coord[0] + 1, coord[1] + 1))
-
-                input[coord[0] - 1][coord[1] + 1] += 1
-                if input[coord[0] - 1][coord[1] + 1] > 9 and (coord[0] - 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] + 1))
-                    flashed.add((coord[0] - 1, coord[1] + 1))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-            ## corners
-            # top left corner
-            elif coord[0] == 0 and coord[1] == 0:
-                # flash 3
-                input[coord[0] + 1][coord[1] + 1] += 1
-                if input[coord[0] + 1][coord[1] + 1] > 9 and (coord[0] + 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] + 1))
-                    flashed.add((coord[0] + 1, coord[1] + 1))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-
-            # bottom right corner
-            elif coord[0] == len(input) - 1 and coord[1] == len(input) - 1:
-                input[coord[0] - 1][coord[1] - 1] += 1
-                if input[coord[0] - 1][coord[1] - 1] > 9 and (coord[0] - 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] - 1))
-                    flashed.add((coord[0] - 1, coord[1] - 1))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-            elif coord[0] == 0 and coord[1] == len(input) - 1:
-                input[coord[0] + 1][coord[1] - 1] += 1
-                if input[coord[0] + 1][coord[1] - 1] > 9 and (coord[0] + 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] - 1))
-                    flashed.add((coord[0] + 1, coord[1] - 1))
-
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-            elif coord[0] == len(input) - 1 and coord[1] == 0:
-                input[coord[0] - 1][coord[1] + 1] += 1
-                if input[coord[0] - 1][coord[1] + 1] > 9 and (coord[0] - 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] + 1))
-                    flashed.add((coord[0] - 1, coord[1] + 1))
-
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-            ## plus
-            elif coord[0] == 0 and 0 < coord[1] < len(input) - 1:
-                # flash 5
-                input[coord[0] + 1][coord[1] - 1] += 1
-                if input[coord[0] + 1][coord[1] - 1] > 9 and (coord[0] + 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] - 1))
-                    flashed.add((coord[0] + 1, coord[1] - 1))
-
-                input[coord[0] + 1][coord[1] + 1] += 1
-                if input[coord[0] + 1][coord[1] + 1] > 9 and (coord[0] + 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] + 1))
-                    flashed.add((coord[0] + 1, coord[1] + 1))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-
-            elif coord[0] == len(input) - 1 and 0 < coord[1] < len(input) - 1:
-                input[coord[0] - 1][coord[1] + 1] += 1
-                if input[coord[0] - 1][coord[1] + 1] > 9 and (coord[0] - 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] + 1))
-                    flashed.add((coord[0] - 1, coord[1] + 1))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-                input[coord[0] - 1][coord[1] - 1] += 1
-                if input[coord[0] - 1][coord[1] - 1] > 9 and (coord[0] - 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] - 1))
-                    flashed.add((coord[0] - 1, coord[1] - 1))
-
-            elif 0 < coord[0] < len(input) - 1 and coord[1] == 0:
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-                input[coord[0]][coord[1] + 1] += 1
-                if input[coord[0]][coord[1] + 1] > 9 and (coord[0], coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] + 1))
-                    flashed.add((coord[0], coord[1] + 1))
-
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-
-                input[coord[0] + 1][coord[1] + 1] += 1
-                if input[coord[0] + 1][coord[1] + 1] > 9 and (coord[0] + 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] + 1))
-                    flashed.add((coord[0] + 1, coord[1] + 1))
-
-                input[coord[0] - 1][coord[1] + 1] += 1
-                if input[coord[0] - 1][coord[1] + 1] > 9 and (coord[0] - 1, coord[1] + 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] + 1))
-                    flashed.add((coord[0] - 1, coord[1] + 1))
-
-            elif 0 < coord[0] < len(input) - 1 and coord[1] == len(input) - 1:
-                input[coord[0] + 1][coord[1]] += 1
-                if input[coord[0] + 1][coord[1]] > 9 and (coord[0] + 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1]))
-                    flashed.add((coord[0] + 1, coord[1]))
-
-                input[coord[0]][coord[1] - 1] += 1
-                if input[coord[0]][coord[1] - 1] > 9 and (coord[0], coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0], coord[1] - 1))
-                    flashed.add((coord[0], coord[1] - 1))
-
-                input[coord[0] - 1][coord[1]] += 1
-                if input[coord[0] - 1][coord[1]] > 9 and (coord[0] - 1, coord[1]) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1]))
-                    flashed.add((coord[0] - 1, coord[1]))
-
-                input[coord[0] - 1][coord[1] - 1] += 1
-                if input[coord[0] - 1][coord[1] - 1] > 9 and (coord[0] - 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] - 1, coord[1] - 1))
-                    flashed.add((coord[0] - 1, coord[1] - 1))
-
-                input[coord[0] + 1][coord[1] - 1] += 1
-                if input[coord[0] + 1][coord[1] - 1] > 9 and (coord[0] + 1, coord[1] - 1) not in flashed:
-                    flash_queue.append((coord[0] + 1, coord[1] - 1))
-                    flashed.add((coord[0] + 1, coord[1] - 1))
+            # https://github.com/alelouis/advent-of-code/blob/master/2021/day-11/main.py
+            for c in checks:
+                i, j = coord[0] + c[0], coord[1] + c[1]
+                if (0 <= i < 10) and (0 <= j < 10):
+                    input[i][j] += 1
+                    if input[i][j] > 9 and (i, j) not in flashed:
+                        flash_queue.append((i, j))
+                        flashed.add((i, j))
 
         # reset
         for i in range(len(input)):
@@ -259,6 +49,6 @@ def simulate_octopuses(input):
 
 
 if __name__ == "__main__":
-    with open("11/input.txt") as f:
+    with open("input.txt") as f:
         lines = [[int(char) for char in i.rstrip("\n")] for i in f.readlines()]
     simulate_octopuses(lines)
