@@ -1,7 +1,7 @@
 import heapq
 
 
-def dijkstra(map):
+def shortest_path(map):
     # pick a route, calc the cost so far
     # if the route becomes too expensive, choose another route?
     # how to keep track of what we visited and what we need to visit?
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     lines5 = [
         [((num + i + j - 1) % 9) + 1 for i in range(0, 5) for num in line] for j in range(0, 5) for line in lines
     ]
-    dijkstra(lines5)
+    shortest_path(lines5)
