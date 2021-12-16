@@ -9,7 +9,7 @@ def simulate_octopuses(input):
 
     # need to avoid edges every time we check or flash.
     flash_counter = 0
-    checks = set((i, j) for i in (-1, 0, 1) for j in (-1, 0, 1)) - set((0, 0))
+    checks = set((i, j) for i in (-1, 0, 1) for j in (-1, 0, 1)) - {0, 0}
     for step in range(1000):
         flash_queue = []
         for i in range(len(input)):
